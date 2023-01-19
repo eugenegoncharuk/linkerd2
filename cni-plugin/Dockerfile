@@ -10,13 +10,13 @@ ARG TARGETARCH
 RUN ./bin/install-deps $TARGETARCH
 
 ## compile cni-plugin utility
-FROM go-deps as golang
-WORKDIR /linkerd-build
-COPY pkg pkg
-COPY controller controller
-COPY cni-plugin cni-plugin
-ARG TARGETARCH
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=$TARGETARCH go build -o /go/bin/linkerd-cni -v -mod=readonly ./cni-plugin/
+# FROM go-deps as golang
+# WORKDIR /linkerd-build
+# COPY pkg pkg
+# COPY controller controller
+# COPY cni-plugin cni-plugin
+# ARG TARGETARCH
+# RUN CGO_ENABLED=0 GOOS=linux GOARCH=$TARGETARCH go build -o /go/bin/linkerd-cni -v -mod=readonly ./cni-plugin/
 
 FROM debian:bullseye-slim
 WORKDIR /linkerd

@@ -90,6 +90,7 @@ func Inject(linkerdNamespace string) webhook.Handler {
 
 		configLabels := configToPrometheusLabels(resourceConfig)
 		proxyInjectionAdmissionRequests.With(admissionRequestLabels(ownerKind, request.Namespace, report.InjectAnnotationAt, configLabels)).Inc()
+		// TODO(stevej): does cni-plugin need to be injected?
 
 		// If the resource is injectable then admit it after creating a patch that
 		// adds the proxy-init and proxy containers.

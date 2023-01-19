@@ -291,6 +291,8 @@ controller-image := DOCKER_REGISTRY + "/controller"
 proxy-image := DOCKER_REGISTRY + "/proxy"
 proxy-init-image := DOCKER_REGISTRY + "/proxy-init"
 orig-proxy-init-image := "ghcr.io/linkerd/proxy-init"
+cni-plugin-image := DOCKER_REGISTRY + "/cni-plugin"
+origin-cni-plugin-image := "ghcr.io/linkerd/cni-plugin"
 policy-controller-image := DOCKER_REGISTRY + "/policy-controller"
 
 linkerd *flags:
@@ -317,6 +319,8 @@ linkerd-install *args='': linkerd-load linkerd-crds-install && _linkerd-ready
             --set='proxy.image.version={{ linkerd-tag }}' \
             --set='proxyInit.image.name={{ proxy-init-image }}' \
             --set="proxyInit.image.version=$(yq .proxyInit.image.version charts/linkerd-control-plane/values.yaml)" \
+            --set='cniPlugin.image.name={{cni-plugin-image}}' \
+            --set="cniPlugin.image.version=$(yq .cniPlugin.image.version charts/linkerd-control-plane/values.yaml)" \
             {{ args }} \
         | {{ _kubectl }} apply -f -
 
@@ -329,6 +333,8 @@ linkerd-load: _linkerd-images _k3d-init
     for i in {1..3} ; do {{ _k3d-load }} \
         '{{ controller-image }}:{{ linkerd-tag }}' \
         '{{ policy-controller-image }}:{{ linkerd-tag }}' \
+        '{{ cni-plugin }}:{{ linkerd-tag }}' \
+        "{{ cni-plugin-image }}:$(yq .cniPlugin.image.version charts/linkerd-control-plane/values.yaml)" \
         '{{ proxy-image }}:{{ linkerd-tag }}' \
         "{{ proxy-init-image }}:$(yq .proxyInit.image.version charts/linkerd-control-plane/values.yaml)" && exit ; sleep 1 ; done
 
@@ -339,6 +345,8 @@ linkerd-build: _policy-controller-build
 _linkerd-images:
     #!/usr/bin/env bash
     set -xeuo pipefail
+    docker pull -q "{{ orig-cni-plugin-image }}:$(yq .cniPlugin.image.version charts/linkerd-control-plane/values.yaml)"
+    #TODO(stevej): now tag it and push it out?
     docker pull -q "{{ orig-proxy-init-image }}:$(yq .proxyInit.image.version charts/linkerd-control-plane/values.yaml)"
     docker tag \
         "{{ orig-proxy-init-image }}:$(yq .proxyInit.image.version charts/linkerd-control-plane/values.yaml)" \

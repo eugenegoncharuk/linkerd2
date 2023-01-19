@@ -50,7 +50,13 @@ Create a new branch in the `linkerd2` repo,
 
 Open a pull request that includes the changes.
 
-## 3. Create a minor releases branch
+## 3. Bump the proxy-init version
+
+If the `linkerd2-proxy-init/cni-plugin` has a new release (which is rare), the follo
+
+TODO(stevej): crib the rest of the proxy-init upgrade verbiage
+
+## 4. Create a minor releases branch
 
 **This step only applies to minor stable releases (e.g. `2.9.1`).**
 
@@ -64,13 +70,13 @@ git push -u origin release/2.9
 
 The branch in the following step should be based off of this one.
 
-## 4. Create the release branch
+## 5. Create the release branch
 
 Create a branch in the `linkerd2` repo, `username/edge-X.X.X` (replace with
 your name and the actual release number, optionally replace `edge` with
 `stable`).
 
-## 5. Cherry pick changes from `main`
+## 6. Cherry pick changes from `main`
 
 **This step only applies to minor stable releases (e.g. `2.9.1`).**
 
@@ -87,7 +93,7 @@ git cherry-pick 223bd232
 
 Each step might result in conflicts that you'll need to address.
 
-## 6. Update the Helm charts versions
+## 7. Update the Helm charts versions
 
 All the Helm charts (linkerd-crds, linkerd-control-plane, linkerd2-cni,
 linkerd-multicluster, linkerd-jaeger and linkerd-viz) have a `version` entry

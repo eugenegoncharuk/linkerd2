@@ -243,6 +243,23 @@ proxyInit:
     mountPath: /run
     name: linkerd-proxy-init-xtables-lock
 
+# cni-plugin configuration
+cniPlugin:
+# -- Log level for the cni-plugin
+  # @default -- info
+  logLevel: ""
+  # -- Log format (`plain` or `json`) for the cni-plugin
+  # @default -- plain
+  logFormat: ""
+  image:
+    # -- Docker image for the cni-plugin container
+    name: cr.l5d.io/linkerd/cni-plugin
+    # -- Pull policy for the cni-plugin container Docker image
+    # @default -- imagePullPolicy
+    pullPolicy: ""
+    # -- Tag for the cni-plugin container Docker image
+    version: v1.0.0
+
 # network validator configuration
 # This runs on a host that uses iptables to reroute network traffic. The validator
 # ensures that iptables is correctly routing requests before we start linkerd.
